@@ -211,6 +211,14 @@ public class Game {
                         newPosition = (row-1) + "|" + col;
                     }
                     
+                    else if ( map[row-1][col] == PLAYER_A ||
+                              map[row-1][col] == PLAYER_B ||
+                              map[row-1][col] == PLAYER_C ||
+                              map[row-1][col] == PLAYER_D ) {
+                        map[row][col] = EMPTY_SPACE;
+                        map[row-1][col] = EMPTY_SPACE;
+                    }
+                    
                     else map[row][col] = EMPTY_SPACE;
 
                     break;
@@ -225,6 +233,14 @@ public class Game {
                         newPosition = row + "|" + (col-1);
                     }
 
+                    else if ( map[row][col-1] == PLAYER_A ||
+                              map[row][col-1] == PLAYER_B ||
+                              map[row][col-1] == PLAYER_C ||
+                              map[row][col-1] == PLAYER_D ) {
+                        map[row][col] = EMPTY_SPACE;
+                        map[row][col-1] = EMPTY_SPACE;
+                    }
+                    
                     else map[row][col] = EMPTY_SPACE;
                     
                     break;
@@ -237,6 +253,14 @@ public class Game {
                         map[row][col] = EMPTY_SPACE;
 
                         newPosition = (row+1) + "|" + col;
+                    }
+                    
+                    else if ( map[row+1][col] == PLAYER_A ||
+                              map[row+1][col] == PLAYER_B ||
+                              map[row+1][col] == PLAYER_C ||
+                              map[row+1][col] == PLAYER_D ) {
+                        map[row][col] = EMPTY_SPACE;
+                        map[row+1][col] = EMPTY_SPACE;
                     }
                     
                     else map[row][col] = EMPTY_SPACE;
@@ -253,6 +277,14 @@ public class Game {
                         newPosition = row + "|" + (col+1);
                     }
 
+                    else if ( map[row][col+1] == PLAYER_A ||
+                              map[row][col+1] == PLAYER_B ||
+                              map[row][col+1] == PLAYER_C ||
+                              map[row][col+1] == PLAYER_D ) {
+                        map[row][col] = EMPTY_SPACE;
+                        map[row][col+1] = EMPTY_SPACE;
+                    }
+                    
                     else map[row][col] = EMPTY_SPACE;
                     
                     break;

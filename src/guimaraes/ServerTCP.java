@@ -88,7 +88,7 @@ public class ServerTCP extends Thread {
     
     public static void main( String []args ) {
         try {
-            server = new ServerSocket(12345);
+            server = new ServerSocket( Config.PORT );
             clients = new ArrayList<BufferedWriter>();
 
             while ( true ) {

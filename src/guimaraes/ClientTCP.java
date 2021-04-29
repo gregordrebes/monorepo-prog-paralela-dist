@@ -29,7 +29,7 @@ public class ClientTCP implements Runnable {
     }
 
     public void connect() throws IOException {
-        socket = new Socket( "127.0.0.1", 12345 );
+        socket = new Socket( Config.IP_LOCAL, Config.PORT );
         ou = socket.getOutputStream();
         ouw = new OutputStreamWriter( ou );
         bfw = new BufferedWriter( ouw );
