@@ -9,7 +9,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.Socket;
-import javax.swing.JTextArea;
+import javax.swing.JTextPane;
 
 public class ClientTCP implements Runnable {
     private Socket socket;
@@ -17,13 +17,13 @@ public class ClientTCP implements Runnable {
     private Writer ouw;
     private BufferedWriter bfw;
     
-    private JTextArea map;
+    private JTextPane map;
     
     private boolean start = false;
     private boolean finish = false;
     private String mapStr = "";
     
-    public ClientTCP( JTextArea map ) throws Exception {
+    public ClientTCP( JTextPane map ) throws Exception {
         this.map = map;
         start();
     }
