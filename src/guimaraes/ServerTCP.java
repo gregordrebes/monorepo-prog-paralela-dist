@@ -21,6 +21,8 @@ public class ServerTCP extends Thread {
     private BufferedReader bufferedReader;
     
     private Game game;
+    
+    private static final int SHOOT_SPEED = 200;
 
     public ServerTCP( Socket connection ) {
         this.connection = connection;
@@ -61,7 +63,20 @@ public class ServerTCP extends Thread {
             while ( action != null && ! action.equalsIgnoreCase( "X" ) ) {
                 action = bufferedReader.readLine();
                 
-                game.doAction(action);
+                if ( action.endsWith( Game.SHOT_UP    ) ||
+                     action.endsWith( Game.SHOT_LEFT  ) ||
+                     action.endsWith( Game.SHOT_DOWN  ) ||
+                     action.endsWith( Game.SHOT_RIGHT ) ) {
+                    
+                    shoot( bfw, action );
+                    
+                    System.out.println("Shoot");
+                }
+                
+                else {
+                    System.out.println("Move");
+                    game.doAction( action );
+                }
                 
                 sendToAll( bfw, game.getField() );
             }
@@ -87,5 +102,39 @@ public class ServerTCP extends Thread {
         } catch ( IOException e ) {
             System.out.println( e );
         }
+    }
+    
+    private void shoot( BufferedWriter bfw, String action ) {
+        
+        Runnable shoot = new Runnable() {
+            
+            @Override
+            public void run() {
+                try {
+                    String position = game.shoot( action );
+                    
+                    sendToAll( bfw, game.getField() );
+                    
+                    System.out.println("1 " + position);
+                    
+                    String direction = action;
+                    
+                    while ( ! position.isEmpty() ) {
+                        
+                        position = game.moveShoot( position, direction );
+                        
+                        Thread.sleep( SHOOT_SPEED );
+                        
+                        sendToAll( bfw, game.getField() );
+                    }
+                } catch ( InterruptedException e ) {
+                    System.out.println( e );
+                }
+
+            }
+        };
+        
+        Thread t = new Thread( shoot );
+        t.start();
     }
 }

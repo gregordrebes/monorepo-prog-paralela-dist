@@ -10,13 +10,20 @@ package guimaraes;
  * @author Gabriel
  */
 public class Game {
-    public static final char DIRECTION_UP     = 'W';
-    public static final char DIRECTION_LEFT   = 'A';
-    public static final char DIRECTION_DOWN   = 'S';
-    public static final char DIRECTION_RIGHT  = 'D';
+    public static final String SHOT_UP    = "UP";
+    public static final String SHOT_LEFT  = "LEFT";
+    public static final String SHOT_DOWN  = "DOWN";
+    public static final String SHOT_RIGHT = "RIGHT";
+    
+    public static final char DIRECTION_UP    = 'W';
+    public static final char DIRECTION_LEFT  = 'A';
+    public static final char DIRECTION_DOWN  = 'S';
+    public static final char DIRECTION_RIGHT = 'D';
     
     private static final char EMPTY_SPACE = ' ';
     private static final char DELIMITER = '#';
+    private static final char SHOOT = '*';
+    
     private static final char PLAYER_A = 'A';
     private static final char PLAYER_B = 'B';
     private static final char PLAYER_C = 'C';
@@ -46,26 +53,27 @@ public class Game {
             case "D":
                 movePlayer( DIRECTION_RIGHT );
                 break;
-            case "UP":
-//                "Atirar para cima"
-                break;
-            case "LEFT":
-//                "Atirar para esquerda"
-                break;
-            case "DOWN":
-//                "Atirar para baixo"
-                break;
-            case "RIGHT":
-//                "Atirar para direita"
-                break;
         }
         
         return getField();
     }
     
-    public void movePlayer( char direction ) {
+    public String getField() {
+        String fieldStr = "";
         
-        char player = 'A';
+        for ( int row = 0; row < ROW; row++ ) {
+            for ( int col = 0; col < COL; col++ ) {
+                fieldStr += map[row][col];
+            }
+            fieldStr += "\n";
+        }
+        
+        return "START \n" + fieldStr + "END";
+    }
+    
+    private void movePlayer( char direction ) {
+        
+        char player = PLAYER_A;
         
         for ( int col = 0; col < COL; col++ ) {
             for ( int row = 0; row < ROW; row++ ) {
@@ -83,8 +91,7 @@ public class Game {
                             break;
                             
                         case DIRECTION_LEFT:
-                            if ( map[row][col-1] == EMPTY_SPACE )
-                            {
+                            if ( map[row][col-1] == EMPTY_SPACE ) {
                                 map[row][col-1] = player;
                                 map[row][col] = EMPTY_SPACE;
                             }
@@ -94,7 +101,6 @@ public class Game {
                         case DIRECTION_DOWN:
                             
                             if ( map[row+1][col] == EMPTY_SPACE ) {
-                                
                                 map[row+1][col] = player;
                                 map[row][col] = EMPTY_SPACE;
                             }
@@ -103,8 +109,7 @@ public class Game {
                             
                         case DIRECTION_RIGHT:
                             
-                            if ( map[row][col+1] == EMPTY_SPACE )
-                            {
+                            if ( map[row][col+1] == EMPTY_SPACE ) {
                                 map[row][col+1] = player;
                                 map[row][col] = EMPTY_SPACE;
                             }
@@ -118,17 +123,143 @@ public class Game {
         }
     }
     
-    public String getField() {
-        String fieldStr = "";
+    public String shoot( String direction ) {
         
-        for ( int row = 0; row < ROW; row++ ) {
-            for ( int col = 0; col < COL; col++ ) {
-                fieldStr += map[row][col];
+        char player = PLAYER_A;
+        char shot = SHOOT;
+        
+        String position = "";
+        
+        for ( int col = 0; col < COL; col++ ) {
+            for ( int row = 0; row < ROW; row++ ) {
+                
+                if ( map[row][col] == player ) {
+                
+                    switch ( direction ) {
+                        case SHOT_UP:
+                            
+                            if ( map[row-1][col] == EMPTY_SPACE ) {
+                                
+                                map[row-1][col] = shot;
+                                
+                                position = (row-1) + "|" + col;
+                            }
+                            
+                            break;
+                            
+                        case SHOT_LEFT:
+                            if ( map[row][col-1] == EMPTY_SPACE ) {
+                                
+                                map[row][col-1] = shot;
+                                
+                                position = row + "|" + (col-1);
+                            }
+                            
+                            break;
+                            
+                        case SHOT_DOWN:
+                            
+                            if ( map[row+1][col] == EMPTY_SPACE ) {
+                                
+                                map[row+1][col] = shot;
+                                
+                                position = (row+1) + "|" + col;
+                            }
+                            
+                            break;
+                            
+                        case SHOT_RIGHT:
+                            
+                            if ( map[row][col+1] == EMPTY_SPACE ) {
+                                
+                                map[row][col+1] = shot;
+                                
+                                position = row + "|" + (col+1);
+                            }
+                                                        
+                            break;
+                    }
+                }
             }
-            fieldStr += "\n";
         }
         
-        return "START \n" + fieldStr + "END";
+        return position;
+    }
+    
+    public String moveShoot ( String position, String direction ) {
+        
+        String newPosition = "";
+        
+        String rowStr = position.split("\\|")[0];
+        String colStr = position.split("\\|")[1];
+        
+        int row = Integer.parseInt( rowStr );
+        int col = Integer.parseInt( colStr );
+        
+        char shot = SHOOT;
+        
+        if ( map[row][col] == shot ) {
+                
+            switch ( direction ) {
+                case SHOT_UP:
+
+                    if ( map[row-1][col] == EMPTY_SPACE ) {
+
+                        map[row-1][col] = shot;
+                        map[row][col] = EMPTY_SPACE;
+
+                        newPosition = (row-1) + "|" + col;
+                    }
+                    
+                    else map[row][col] = EMPTY_SPACE;
+
+                    break;
+
+                case SHOT_LEFT:
+                    
+                    if ( map[row][col-1] == EMPTY_SPACE ) {
+
+                        map[row][col-1] = shot;
+                        map[row][col] = EMPTY_SPACE;
+
+                        newPosition = row + "|" + (col-1);
+                    }
+
+                    else map[row][col] = EMPTY_SPACE;
+                    
+                    break;
+
+                case SHOT_DOWN:
+
+                    if ( map[row+1][col] == EMPTY_SPACE ) {
+
+                        map[row+1][col] = shot;
+                        map[row][col] = EMPTY_SPACE;
+
+                        newPosition = (row+1) + "|" + col;
+                    }
+                    
+                    else map[row][col] = EMPTY_SPACE;
+
+                    break;
+
+                case SHOT_RIGHT:
+
+                    if ( map[row][col+1] == EMPTY_SPACE ) {
+
+                        map[row][col+1] = shot;
+                        map[row][col] = EMPTY_SPACE;
+
+                        newPosition = row + "|" + (col+1);
+                    }
+
+                    else map[row][col] = EMPTY_SPACE;
+                    
+                    break;
+            }
+        }
+        
+        return newPosition;
     }
     
     private void buildMap() {
